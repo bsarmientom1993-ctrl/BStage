@@ -1,0 +1,19 @@
+[Unit]
+Description=BSplayer - Standalone Multitrack Backing Track Player
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/BSplayer
+ExecStart=/usr/bin/python3 /home/pi/BSplayer/main.py
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+# Realtime audio priority
+LimitRTPRIO=95
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

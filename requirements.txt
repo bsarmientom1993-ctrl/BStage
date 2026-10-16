@@ -1,0 +1,14 @@
+# BSplayer / BStage Dependencies
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+sounddevice>=0.4.6
+soundfile>=0.12.1
+numpy>=1.24.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+websockets>=11.0
+
+# Hardware (Raspberry Pi only - optional for PC development)
+# RPi.GPIO>=0.7.1; platform_system == "Linux"
+# Adafruit-SSD1306>=1.6.2; platform_system == "Linux"
+# Pillow>=10.0.0; platform_system == "Linux"

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BSplayer Kiosk 4" LCD Display</title>
+    <link rel="stylesheet" href="screen.css">
+</head>
+<body class="kiosk-mode">
+
+    <!-- Top Status Bar -->
+    <header class="status-bar">
+        <div class="status-left">
+            <div class="bpm-badge">
+                <span class="bpm-led" id="bpm-led"></span>
+                <span id="bpm-val">120</span> <small>BPM</small>
+            </div>
+            <div class="section-badge" id="section-badge">INTRO</div>
+        </div>
+
+        <div class="status-center">
+            <div class="device-pill">
+                <span class="dot-online"></span>
+                <span id="hw-status">UMC 404HD (4 CH)</span>
+            </div>
+        </div>
+
+        <div class="status-right">
+            <div class="clock-display" id="clock-display">00:00:00</div>
+            <div class="wifi-indicator"><span>📶</span> <span>AP</span></div>
+        </div>
+    </header>
+
+    <!-- Main Viewport (800x480 Optimized) -->
+    <div class="viewport-container">
+
+        <!-- VIEW 1: LIVE PERFORMANCE (Hero Deck) -->
+        <div class="view-panel active" id="view-perform">
+            <div class="perform-hero">
+                <div class="song-meta">
+                    <span class="setlist-pos" id="screen-setlist-pos">Pista Activa</span>
+                    <h1 class="song-title-main" id="screen-song-title">BSplayer Multitrack</h1>
+                    <h2 class="song-artist-sub" id="screen-song-artist">Artista • 4 Stems</h2>
+                </div>
+
+                <!-- Big Circular Tape Reel / Progress Dial -->
+                <div class="dial-container">
+                    <svg class="progress-ring" width="170" height="170">
+                        <circle class="ring-bg" stroke="rgba(255,255,255,0.06)" stroke-width="10" cx="85" cy="85" r="70" fill="transparent"/>
+                        <circle class="ring-fill" id="ring-fill" stroke="url(#amber-glow)" stroke-width="10" cx="85" cy="85" r="70" fill="transparent"
+                                stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="amber-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#e29b38" />
+                                <stop offset="100%" stop-color="#487e53" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    <div class="dial-center-content">
+                        <div class="time-big" id="screen-time-current">00:00</div>
+                        <div class="time-sub" id="screen-time-total">/ 00:00</div>
+                        <div class="state-pill" id="screen-state-pill">STOPPED</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Animated Audio Visualizer / Waveform -->
+            <div class="visualizer-container">
+                <canvas id="waveform-canvas" width="760" height="56"></canvas>
+            </div>
+
+            <!-- Live Prompter Strip (Current & Next Lyric line) -->
+            <div class="stage-cue-card">
+                <div class="cue-chord" id="cue-chord">[ C ]</div>
+                <div class="cue-lyric" id="cue-lyric">Cargando letras de la canción...</div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: TACTILE MIXER (4 Stems for 4" Screen) -->
+        <div class="view-panel" id="view-mixer">
+            <div class="mixer-grid-compact" id="screen-mixer-strips">
+                <!-- Rendered dynamically -->
+            </div>
+        </div>
+
+        <!-- VIEW 3: SETLIST & EXPLORER (BROWSE SONGS & CREATE SHOWS) -->
+        <div class="view-panel" id="view-explorer">
+            <div class="explorer-container">
+                <!-- Left Column: All Available Songs -->
+                <div class="explorer-panel">
+                    <div class="explorer-panel-header">
+                        <span>BIBLIOTECA DE CANCIONES</span>
+                        <span id="songs-count" style="color:var(--text-sand); font-size:0.75rem;">0 temas</span>
+                    </div>
+                    <div class="song-list-scroll" id="explorer-songs-list">
+                        <!-- Dynamic songs -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Current Show / Setlist -->
+                <div class="explorer-panel">
+                    <div class="explorer-panel-header">
+                        <span id="current-show-name">SHOW ACTIVO</span>
+                        <button onclick="createNewShowPrompt()" style="background:var(--bg-card); border:1px solid var(--border-wood); color:var(--amber-tube); border-radius:4px; padding:2px 8px; font-size:0.7rem; cursor:pointer;">+ Nuevo Show</button>
+                    </div>
+                    <div class="song-list-scroll" id="explorer-show-list">
+                        <!-- Dynamic show items -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: FULL SCREEN TELEPROMPTER -->
+        <div class="view-panel" id="view-prompter">
+            <div class="prompter-scroll-view" id="screen-lyrics-scroll">
+                <!-- Big scrolling lyrics -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar (Touchable & mapped to hardware buttons) -->
+    <nav class="nav-bar-dock">
+        <button class="nav-btn active" onclick="switchView('perform', this)">
+            <span class="nav-icon">⚡</span>
+            <span>EN VIVO</span>
+        </button>
+        <button class="nav-btn" onclick="switchView('mixer', this)">
+            <span class="nav-icon">🎛</span>
+            <span>MEZCLADOR</span>
+        </button>
+        <button class="nav-btn" onclick="switchView('explorer', this)">
+            <span class="nav-icon">📁</span>
+            <span>SHOWS</span>
+        </button>
+        <button class="nav-btn" onclick="switchView('prompter', this)">
+            <span class="nav-icon">📜</span>
+            <span>LETRAS</span>
+        </button>
+
+        <!-- Hardware Mini Transport -->
+        <div class="quick-transport">
+            <button class="q-btn q-prev" onclick="seekTo(0)">⏮</button>
+            <button class="q-btn q-stop" onclick="fetch('/api/playback/stop', {method:'POST'})">⏹</button>
+            <button class="q-btn q-play" id="screen-btn-play" onclick="togglePlay()">▶</button>
+        </div>
+    </nav>
+
+    <!-- Floating Master Volume HUD Overlay (Appears when knob is turned) -->
+    <div class="volume-hud-overlay" id="volume-hud">
+        <div class="hud-content">
+            <div class="hud-label">VOLUMEN MAESTRO</div>
+            <div class="hud-val" id="hud-val">100%</div>
+            <div class="hud-bar-bg">
+                <div class="hud-bar-fill" id="hud-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="screen.js"></script>
+</body>
+</html>

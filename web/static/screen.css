@@ -1,0 +1,653 @@
+/* ==============================================================================
+   BSplayer 4-Inch LCD Screen UI - Woodland & Forest Organic Aesthetic
+   Inspirado en maderas nobles (Nogal/Cedro), ámbar analógico y verde bosque.
+   Optimizado específicamente para 800x480 (Pantalla LCD Raspberry Pi)
+   ============================================================================== */
+
+:root {
+  /* Paleta Bosque & Maderas Nobles */
+  --bg-deep: #100c09;         /* Nogal tostado / Tierra profunda */
+  --bg-panel: #1a1410;        /* Madera oscura de cedro */
+  --bg-card: #251d17;         /* Tilo y caoba cálida */
+  --bg-card-hover: #33271f;
+  --border-wood: #3e3025;     /* Borde grano de madera / latón envejecido */
+  
+  /* Acentos Orgánicos */
+  --amber-tube: #e29b38;      /* Ámbar cálido / Fuego de bosque */
+  --amber-bright: #f3b65a;
+  --forest-green: #487e53;    /* Verde pino / Musgo de bosque */
+  --forest-bright: #68a674;
+  --autumn-red: #b84333;      /* Hoja de otoño / Ladrillo rústico */
+  --autumn-bright: #d9534f;
+  --golden-sand: #ffd166;     /* Oro viejo / Miel */
+  
+  /* Tipografía */
+  --text-parchment: #f6efe6;  /* Pergamino crema / Marfil natural */
+  --text-sand: #bdaea0;       /* Arena cálida */
+  --text-bark: #7a6a5c;       /* Corteza envejecida */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+body.kiosk-mode {
+  background-color: var(--bg-deep);
+  color: var(--text-parchment);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  background-image: radial-gradient(circle at 50% 0%, #1e1611 0%, #100c09 75%);
+}
+
+/* 1. Top Status Bar (Height: 44px) */
+.status-bar {
+  height: 44px;
+  background: rgba(26, 20, 16, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-wood);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.status-left, .status-right, .status-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bpm-badge {
+  background: var(--bg-card);
+  border: 1px solid var(--border-wood);
+  padding: 3px 10px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-parchment);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bpm-led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #3b2c22;
+  transition: all 0.05s ease-out;
+}
+
+.bpm-led.beat {
+  background-color: var(--amber-tube);
+  box-shadow: 0 0 14px var(--amber-tube);
+  transform: scale(1.35);
+}
+
+.section-badge {
+  background: linear-gradient(135deg, #b84333, #e29b38);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  box-shadow: 0 0 12px rgba(226, 155, 56, 0.35);
+}
+
+.device-pill {
+  background: #140f0c;
+  border: 1px solid var(--border-wood);
+  padding: 3px 12px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-sand);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot-online {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--forest-green);
+  box-shadow: 0 0 8px var(--forest-bright);
+}
+
+.clock-display {
+  font-family: monospace;
+  font-size: 0.82rem;
+  color: var(--text-sand);
+}
+
+.wifi-indicator {
+  font-size: 0.75rem;
+  color: var(--text-sand);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 2. Main Viewport Container (Height: 380px) */
+.viewport-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  padding: 10px 16px 6px 16px;
+}
+
+.view-panel {
+  position: absolute;
+  top: 10px; left: 16px; right: 16px; bottom: 6px;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.view-panel.active {
+  display: flex;
+}
+
+/* VIEW 1: PERFORMANCE HERO */
+.perform-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.song-meta {
+  flex: 1;
+}
+
+.setlist-pos {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--amber-tube);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.song-title-main {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: var(--text-parchment);
+  line-height: 1.15;
+  margin: 3px 0 5px 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 520px;
+}
+
+.song-artist-sub {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-sand);
+}
+
+/* Dial & Circular Tape Reel (Forest Amber) */
+.dial-container {
+  width: 170px;
+  height: 170px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 0; left: 0;
+}
+
+.ring-fill {
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+.dial-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.time-big {
+  font-size: 1.85rem;
+  font-weight: 900;
+  font-family: monospace;
+  color: var(--amber-bright);
+  text-shadow: 0 0 14px rgba(226, 155, 56, 0.4);
+}
+
+.time-sub {
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--text-bark);
+}
+
+.state-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-bark);
+  border: 1px solid var(--border-wood);
+  margin-top: 4px;
+}
+
+.state-pill.playing {
+  background: rgba(72, 126, 83, 0.25);
+  color: var(--forest-bright);
+  border-color: var(--forest-green);
+}
+
+/* Waveform Canvas (Forest / Warm Wood tone) */
+.visualizer-container {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-wood);
+  border-radius: 8px;
+  height: 56px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+}
+
+#waveform-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Stage Cue Card (Live Prompter) */
+.stage-cue-card {
+  background: var(--bg-card);
+  border-left: 4px solid var(--amber-tube);
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 50px;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+.cue-chord {
+  font-family: monospace;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--golden-sand);
+  background: rgba(226, 155, 56, 0.18);
+  padding: 4px 10px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  border: 1px solid rgba(226, 155, 56, 0.3);
+}
+
+.cue-lyric {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-parchment);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* VIEW 2: COMPACT 4-STEM MIXER */
+.mixer-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  height: 100%;
+}
+
+.screen-strip {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-wood);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.strip-badge-out {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--amber-tube);
+  background: rgba(226, 155, 56, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(226, 155, 56, 0.25);
+}
+
+.strip-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: var(--text-parchment);
+}
+
+.strip-fader-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 180px;
+}
+
+.screen-vu-meter {
+  width: 7px;
+  height: 170px;
+  background: #0d0a07;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen-vu-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(0deg, var(--forest-green) 65%, var(--amber-tube) 85%, var(--autumn-red) 100%);
+  border-radius: 4px;
+  transition: height 0.05s ease-out;
+}
+
+.screen-fader {
+  -webkit-appearance: slider-vertical;
+  width: 30px;
+  height: 170px;
+  cursor: pointer;
+  accent-color: var(--amber-tube);
+}
+
+.strip-vol-text {
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--text-sand);
+}
+
+.strip-mute-btn {
+  width: 100%;
+  padding: 8px 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-wood);
+  color: var(--text-sand);
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.strip-mute-btn.active {
+  background: var(--autumn-red);
+  color: #fff;
+  border-color: #d9534f;
+  box-shadow: 0 0 10px rgba(184, 67, 51, 0.5);
+}
+
+/* VIEW 3: SETLIST & EXPLORER (SHOW CREATOR) */
+.explorer-container {
+  display: flex;
+  gap: 14px;
+  height: 100%;
+}
+
+.explorer-panel {
+  flex: 1;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-wood);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.explorer-panel-header {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--amber-tube);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.song-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.song-item-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-wood);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.song-item-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--amber-tube);
+}
+
+.song-item-card.current {
+  background: #2a1f17;
+  border-color: var(--amber-tube);
+  border-left: 4px solid var(--amber-tube);
+}
+
+.song-item-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-parchment);
+}
+
+.song-item-meta {
+  font-size: 0.75rem;
+  color: var(--text-bark);
+}
+
+/* VIEW 4: FULL PROMPTER */
+.prompter-scroll-view {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-wood);
+  border-radius: 8px;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.full-lyric-row {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+}
+
+.full-lyric-row.active {
+  background: #2b1f16;
+  border-left-color: var(--amber-tube);
+  transform: scale(1.02);
+}
+
+.full-chord {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--golden-sand);
+  font-family: monospace;
+}
+
+.full-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-parchment);
+}
+
+/* 3. Bottom Navigation Dock (Height: 54px) */
+.nav-bar-dock {
+  height: 54px;
+  background: #140f0c;
+  border-top: 1px solid var(--border-wood);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-sand);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.nav-btn.active {
+  color: var(--amber-bright);
+  background: rgba(226, 155, 56, 0.15);
+  border: 1px solid rgba(226, 155, 56, 0.3);
+}
+
+.nav-icon {
+  font-size: 1.05rem;
+}
+
+.quick-transport {
+  display: flex;
+  gap: 8px;
+}
+
+.q-btn {
+  width: 44px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid var(--border-wood);
+  background: var(--bg-card);
+  color: var(--text-parchment);
+  font-size: 1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.q-btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.q-play {
+  background: linear-gradient(135deg, var(--forest-green), var(--amber-tube));
+  color: #fff;
+  border: none;
+  width: 58px;
+  font-size: 1.15rem;
+  box-shadow: 0 0 12px rgba(72, 126, 83, 0.4);
+}
+
+/* Floating Volume HUD */
+.volume-hud-overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(20, 15, 12, 0.96);
+  border: 1px solid var(--amber-tube);
+  border-radius: 14px;
+  padding: 22px 30px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 15px rgba(226, 155, 56, 0.3);
+  display: none;
+  opacity: 0;
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.volume-hud-overlay.visible {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.hud-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-sand);
+  letter-spacing: 1px;
+}
+
+.hud-val {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: monospace;
+  color: var(--amber-bright);
+}
+
+.hud-bar-bg {
+  width: 160px;
+  height: 8px;
+  background: #2b2018;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hud-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--forest-green), var(--amber-tube));
+  border-radius: 4px;
+}

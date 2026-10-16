@@ -1,0 +1,534 @@
+/* ==============================================================================
+   BSplayer Web Console - Woodland & Forest Organic Aesthetic
+   ============================================================================== */
+
+:root {
+  --bg-primary: #110d0a;         /* Nogal tostado / Tierra profunda */
+  --bg-secondary: #1a1410;       /* Madera oscura de cedro */
+  --bg-surface: #241c16;         /* Tilo y caoba cálida */
+  --bg-card: #2e241c;            /* Madera pulida */
+  --bg-card-hover: #382c22;
+  --border-color: #423428;       /* Borde grano de madera / latón envejecido */
+  
+  --text-main: #f6efe6;          /* Pergamino crema natural */
+  --text-muted: #b8a898;         /* Arena cálida */
+  --text-bark: #7a6a5c;
+  
+  --accent-amber: #e29b38;       /* Ámbar cálido analógico */
+  --accent-gold: #ffd166;        /* Oro cálido */
+  --accent-green: #487e53;       /* Verde musgo de bosque */
+  --accent-red: #b84333;         /* Óxido otoñal */
+  
+  --fader-track: #15100c;
+  --fader-thumb: #e29b38;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-image: radial-gradient(circle at 50% 0%, #201712 0%, #110d0a 75%);
+}
+
+/* Header & Top Bar */
+header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, #b84333, #e29b38);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(226, 155, 56, 0.3);
+}
+
+.song-info h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.song-info span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.top-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.device-badge {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  color: var(--text-muted);
+}
+
+.device-badge:hover {
+  border-color: var(--accent-amber);
+  color: var(--text-main);
+}
+
+.device-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+}
+
+/* Transport Bar */
+.transport-bar {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.transport-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-transport {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-transport:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-amber);
+}
+
+.btn-play {
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-amber));
+  color: #fff;
+  border: none;
+  font-size: 1.05rem;
+  padding: 10px 24px;
+  box-shadow: 0 0 14px rgba(226, 155, 56, 0.35);
+}
+
+.btn-play:hover {
+  filter: brightness(1.15);
+}
+
+.btn-stop {
+  background: #251714;
+  border-color: #4a221b;
+  color: #e57373;
+}
+
+.btn-stop:hover {
+  background: #361f1a;
+}
+
+/* Time Counter & Progress */
+.time-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.current-time {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+  text-shadow: 0 0 10px rgba(226, 155, 56, 0.3);
+}
+
+.total-time {
+  font-size: 1.1rem;
+  color: var(--text-bark);
+}
+
+.timeline-container {
+  flex: 1;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-amber));
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.05s linear;
+}
+
+.markers-row {
+  display: flex;
+  gap: 8px;
+}
+
+.marker-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.marker-pill.active {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* Main Area Layout (Mixer + Prompter Tabs) */
+.main-content {
+  display: flex;
+  flex: 1;
+  padding: 20px 24px;
+  gap: 24px;
+}
+
+/* Mixer Section */
+.mixer-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mixer-console {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Channel Strip */
+.channel-strip {
+  width: 110px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.track-group-tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-card);
+  color: var(--accent-amber);
+  border: 1px solid var(--border-color);
+}
+
+.track-group-tag.click {
+  background: #382414;
+  color: var(--accent-gold);
+  border-color: var(--accent-amber);
+}
+
+.channel-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.output-routing-select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--accent-amber);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.output-routing-select:focus {
+  outline: 1px solid var(--accent-amber);
+}
+
+/* VU Meter & Fader Pair */
+.fader-vu-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 200px;
+}
+
+.vu-meter-bar {
+  width: 8px;
+  height: 180px;
+  background: #0d0a07;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vu-meter-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(0deg, var(--accent-green) 60%, var(--accent-amber) 85%, var(--accent-red) 100%);
+  border-radius: 4px;
+  transition: height 0.05s ease-out;
+}
+
+.vertical-slider {
+  -webkit-appearance: slider-vertical;
+  width: 24px;
+  height: 180px;
+  cursor: pointer;
+  accent-color: var(--accent-amber);
+}
+
+.volume-value-label {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--text-muted);
+}
+
+/* Solo & Mute Buttons */
+.strip-buttons {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.btn-mute, .btn-solo {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+
+.btn-mute.active {
+  background: var(--accent-red);
+  color: #fff;
+  border-color: #d9534f;
+  box-shadow: 0 0 8px rgba(184, 67, 51, 0.5);
+}
+
+.btn-solo.active {
+  background: var(--accent-amber);
+  color: #000;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 8px rgba(226, 155, 56, 0.5);
+}
+
+/* Master Section */
+.channel-strip.master {
+  background: #2a1f18;
+  border-color: var(--accent-amber);
+  border-width: 1.5px;
+}
+
+.channel-strip.master .channel-title {
+  color: var(--accent-amber);
+}
+
+/* Prompter & Stage Lyrics View */
+.prompter-section {
+  flex: 2;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompter-header {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-amber);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lyrics-box {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 8px;
+}
+
+.lyric-item {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.lyric-item.active {
+  background: #33241b;
+  border-left-color: var(--accent-amber);
+  transform: scale(1.02);
+}
+
+.chord-line {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-family: monospace;
+  margin-bottom: 4px;
+}
+
+.lyric-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* Modal Dialog */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.device-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+
+.device-card:hover {
+  border-color: var(--accent-amber);
+}
+
+.device-card.active {
+  border-color: var(--accent-green);
+  background: #1c261e;
+}

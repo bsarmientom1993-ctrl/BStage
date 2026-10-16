@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and temporary data
+.cache/
+.pytest_cache/
+*.tmp
+*.tmp.*
+*.log
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# User Audio Packages & Large Files (Keep only demo-song for out-of-the-box testing)
+projects/*
+!projects/demo-song
+!projects/demo-song/**
+!projects/demo-song.bsp
+!projects/_shows
+!projects/_shows/**
+!projects/.gitkeep

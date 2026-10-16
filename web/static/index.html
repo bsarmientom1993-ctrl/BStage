@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSplayer - Multitrack Backing Track Player</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <div class="logo-badge">BSPLAYER</div>
+            <div class="song-info">
+                <h1 id="song-title">Cargando proyecto...</h1>
+                <span id="song-artist">Artista • 120 BPM</span>
+            </div>
+        </div>
+
+        <div class="top-right-controls">
+            <div class="device-badge" style="cursor:default;">
+                <span style="color:var(--accent-amber); font-weight:700;">🎵 Tema:</span>
+                <select id="select-project" onchange="loadSelectedProject(this.value)" style="background:transparent; border:none; color:var(--text-main); font-weight:700; cursor:pointer; outline:none;">
+                </select>
+            </div>
+
+            <div class="device-badge" onclick="openDeviceModal()">
+                <div class="device-dot" id="connection-status"></div>
+                <span id="active-device-name">Detectando placa de audio...</span>
+                <span>⚙</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Transport Bar -->
+    <section class="transport-bar">
+        <div class="transport-buttons">
+            <button class="btn-transport btn-stop" id="btn-stop">
+                <span>⏹</span> Detener
+            </button>
+            <button class="btn-transport btn-play" id="btn-play">
+                <span>▶</span> Reproducir
+            </button>
+        </div>
+
+        <div class="time-display">
+            <span class="current-time" id="time-current">00:00.0</span>
+            <span class="total-time">/ <span id="time-total">00:00.0</span></span>
+        </div>
+
+        <div class="timeline-container">
+            <div class="progress-bar-bg" id="progress-bar-bg">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="markers-row" id="markers-container">
+                <!-- Markers generated dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+        <!-- Mixer Console -->
+        <section class="mixer-section">
+            <div class="section-header">
+                <h2>Mezclador Multicanal (Stems)</h2>
+                <span style="font-size:0.85rem; color:var(--text-muted);">Reloj maestro: 48kHz / 24-bit PCM</span>
+            </div>
+
+            <div class="mixer-console">
+                <!-- Individual Stems Strips -->
+                <div id="mixer-strips" style="display: flex; gap: 16px;">
+                    <!-- Track strips rendered here -->
+                </div>
+
+                <!-- Master Channel Strip -->
+                <div class="channel-strip master">
+                    <div class="track-group-tag" style="background:#0070f3; color:#fff;">MASTER</div>
+                    <div class="channel-title">Salidas 1-4</div>
+
+                    <div style="font-size:0.7rem; color:var(--accent-cyan); font-weight:700;">Hardware Out</div>
+
+                    <div class="fader-vu-container">
+                        <!-- 4 VU meter bars for Behringer UMC404HD Out 1, 2, 3, 4 -->
+                        <div style="display:flex; gap:3px;">
+                            <div class="vu-meter-bar" style="width:6px;" title="Out 1">
+                                <div class="vu-meter-fill" id="master-vu-0"></div>
+                            </div>
+                            <div class="vu-meter-bar" style="width:6px;" title="Out 2">
+                                <div class="vu-meter-fill" id="master-vu-1"></div>
+                            </div>
+                            <div class="vu-meter-bar" style="width:6px;" title="Out 3">
+                                <div class="vu-meter-fill" id="master-vu-2"></div>
+                            </div>
+                            <div class="vu-meter-bar" style="width:6px;" title="Out 4">
+                                <div class="vu-meter-fill" id="master-vu-3"></div>
+                            </div>
+                        </div>
+
+                        <input type="range" class="vertical-slider" id="master-fader" min="0" max="1.5" step="0.01" value="1.0" orient="vertical">
+                    </div>
+
+                    <div class="volume-value-label" id="master-vol-lbl">100%</div>
+                    <div style="font-size:0.7rem; color:var(--text-muted);">Main Fader</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prompter & Lyrics View -->
+        <section class="prompter-section">
+            <div class="prompter-header">
+                <span>Teleprompter de Escenario (Letras y Acordes)</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Sincronizado al milisegundo</span>
+            </div>
+
+            <div class="lyrics-box" id="lyrics-box">
+                <!-- Dynamic lyrics -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Audio Device Selection Modal -->
+    <div class="modal-overlay" id="device-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Configuración de Hardware de Audio</h3>
+                <button onclick="closeDeviceModal()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+                Selecciona la interfaz de audio de salida (ej. Behringer UMC404HD, Voicemeeter o Altavoces):
+            </p>
+            <div class="device-list" id="device-list-container">
+                <!-- Devices rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

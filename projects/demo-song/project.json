@@ -1,0 +1,115 @@
+{
+  "id": "demo-song",
+  "title": "BSplayer Demo - 4 Output Multitrack",
+  "artist": "BSplayer Team",
+  "bpm": 120.0,
+  "time_signature": "4/4",
+  "duration_seconds": 32.0,
+  "tracks": [
+    {
+      "id": "trk-1",
+      "name": "Drums & Bass",
+      "filename": "drums_bass.wav",
+      "volume": 1.0,
+      "pan": 0.0,
+      "output_channel": 0,
+      "extra_outputs": [],
+      "aux_volume": 1.0,
+      "aux_channel": null,
+      "mute": false,
+      "solo": false,
+      "is_click": false,
+      "group": "Rhythm"
+    },
+    {
+      "id": "trk-2",
+      "name": "Harmony & Synth",
+      "filename": "chords.wav",
+      "volume": 0.72,
+      "pan": 0.0,
+      "output_channel": 0,
+      "extra_outputs": [],
+      "aux_volume": 1.0,
+      "aux_channel": null,
+      "mute": false,
+      "solo": false,
+      "is_click": false,
+      "group": "Keyboards"
+    },
+    {
+      "id": "trk-3",
+      "name": "Lead Arpeggio",
+      "filename": "lead.wav",
+      "volume": 0.85,
+      "pan": 0.0,
+      "output_channel": 0,
+      "extra_outputs": [],
+      "aux_volume": 1.0,
+      "aux_channel": null,
+      "mute": false,
+      "solo": false,
+      "is_click": false,
+      "group": "Guitars"
+    },
+    {
+      "id": "trk-4",
+      "name": "Click & Count-in",
+      "filename": "click.wav",
+      "volume": 1.0,
+      "pan": 0.0,
+      "output_channel": 0,
+      "extra_outputs": [],
+      "aux_volume": 1.0,
+      "aux_channel": null,
+      "mute": false,
+      "solo": false,
+      "is_click": true,
+      "group": "Click"
+    }
+  ],
+  "markers": [
+    {
+      "name": "Intro",
+      "time_seconds": 0.0
+    },
+    {
+      "name": "Verse 1",
+      "time_seconds": 8.0
+    },
+    {
+      "name": "Chorus",
+      "time_seconds": 16.0
+    },
+    {
+      "name": "Outro",
+      "time_seconds": 24.0
+    }
+  ],
+  "lyrics": [
+    {
+      "time_seconds": 0.0,
+      "text": "Bienvenidos a BSplayer",
+      "chords": "[ C ]"
+    },
+    {
+      "time_seconds": 8.0,
+      "text": "Reproduciendo 4 stems independientes a 48kHz 24-bit",
+      "chords": "[ G ]"
+    },
+    {
+      "time_seconds": 16.0,
+      "text": "Canal 4 dedicado a Claqueta en Auriculares",
+      "chords": "[ Am ]"
+    },
+    {
+      "time_seconds": 24.0,
+      "text": "Sincronizaci\u00f3n exacta sin latencia ni jitter",
+      "chords": "[ F ]"
+    }
+  ],
+  "video_file": null,
+  "midi_file": null,
+  "midi_cues": [],
+  "is_package": true,
+  "package_path": "D:\\Blas\\BSplayer\\projects\\demo-song.bsp"
+}
